@@ -20,8 +20,8 @@ Both have moved several steps away from the controller. This library targets the
 
 ## Scope
 
-- **In scope (v0.1):** all live measurements, configured setpoints, and alarm flags documented in Bayrol's PM5 Modbus-TCP protocol spec. Polling-based change events.
-- **Out of scope (today):** writing setpoints, schedule control, dosing pump control, history, firmware updates. Modbus is read-only on this controller; writes have to go through the web GUI, which is a separate reverse-engineering project (see [Limitations](#limitations) below).
+- **In scope:** all live measurements, configured setpoints, and alarm flags documented in Bayrol's PM5 Modbus-TCP protocol spec. Polling-based change events.
+- **Out of scope (by design):** writes of any kind — setpoints, schedules, dosing control. The library is intentionally read-only. The controller's Modbus server doesn't accept writes, and the web GUI / cloud paths that do are not pursued here.
 
 ## Install
 
@@ -100,10 +100,9 @@ The complete key catalogues live in [`src/spec.ts`](./src/spec.ts) — `MEASUREM
 
 ## Limitations
 
-- **Read-only.** The Modbus-TCP server on the controller is read-only by design (Bayrol's spec document is explicit about this). Adjusting setpoints, controlling dosing pumps, changing schedules etc. has to go through the web GUI, and the web GUI uses a fresh per-session token plus a custom `wui.*` JS protocol — that's a much bigger reverse-engineering project, planned but not in v0.1.
+- **Read-only by design.** Bayrol's Modbus-TCP server doesn't accept writes (verified — FC03 holding registers and FC01 coils both return "illegal function"). This library doesn't pursue the controller's other interfaces either.
 - **No multi-register reads.** Each register is fetched in its own request. On a local LAN this is fine; on a high-latency link it adds up.
 - **No live push.** Modbus has no subscription model. Polling is the only path; `watch()` wraps it.
-- **MQTT.** Recent PM5 firmware (≥ 9.0.0) supports MQTT, but the broker is Bayrol's "Pool Connect" cloud, not a local one — the controller's local TCP ports 1883/8883 are closed. Out of scope for a local-first library.
 
 ## Supported devices
 
