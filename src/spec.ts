@@ -64,18 +64,25 @@ export const PARAMETERS = [
   { address: 3017, key: "chlorine_bromine_setpoint", label: "Setpoint Cl/Br", unit: "mg/l", decimals: 2 },
   { address: 3018, key: "chlorine_bromine_alarm_lower", label: "Cl/Br lower alarm threshold", unit: "mg/l", decimals: 2 },
   { address: 3019, key: "chlorine_bromine_alarm_upper", label: "Cl/Br upper alarm threshold", unit: "mg/l", decimals: 2 },
-  // Spec lists 3049 and 3050 with identical English labels ("Setpoint Redox").
-  // Live device returns different values (3049=750, 3050=625 on this PM5).
-  // 3049 appears to be the active setpoint; 3050 may be a secondary / fallback.
-  // Kept distinct here so the raw values are accessible to callers; not yet
-  // dependable enough to alias one to the other.
-  { address: 3049, key: "redox_setpoint", label: "Setpoint Redox", unit: "mV", decimals: 0 },
-  { address: 3050, key: "redox_setpoint_alt", label: "Setpoint Redox (secondary)", unit: "mV", decimals: 0 },
-  { address: 3051, key: "redox_alarm_lower", label: "Redox lower alarm threshold", unit: "mV", decimals: 0 },
-  // 3052 is also documented with the same label as 3051. Same caveat.
-  { address: 3052, key: "redox_alarm_lower_alt", label: "Redox lower alarm threshold (secondary)", unit: "mV", decimals: 0 },
-  { address: 3053, key: "redox_alarm_upper", label: "Redox upper alarm threshold", unit: "mV", decimals: 0 },
-  { address: 3054, key: "redox_alarm_upper_alt", label: "Redox upper alarm threshold (secondary)", unit: "mV", decimals: 0 },
+  // The 2013 spec labels 3049/3050 both as "Setpoint Redox", 3051/3052 both
+  // as "Redox lower alarm", and 3053/3054 both as "Redox upper alarm". On a
+  // PM5 Bromine running 9.17401.0 the on-device GUI shows the user-set
+  // values at 3050 / 3051 / 3052, NOT the addresses the spec implies:
+  //
+  //   address  spec label                live value   actual role (verified)
+  //   3049     "Setpoint Redox"          750          unknown / secondary
+  //   3050     "Setpoint Redox"          625          setpoint (the target)
+  //   3051     "Redox lower alarm"       700          UPPER alarm threshold
+  //   3052     "Redox lower alarm"       550          LOWER alarm threshold
+  //   3053     "Redox upper alarm"       800          unknown / secondary
+  //   3054     "Redox upper alarm"       700          unknown / secondary (mirrors 3051?)
+  //
+  // The mapping below is what the GUI actually exposes. The three unknown
+  // registers (3049, 3053, 3054) are not surfaced as named keys — read them
+  // directly via PoolManager's modbus transport if you need them.
+  { address: 3050, key: "redox_setpoint", label: "Setpoint Redox", unit: "mV", decimals: 0 },
+  { address: 3052, key: "redox_alarm_lower", label: "Redox lower alarm threshold", unit: "mV", decimals: 0 },
+  { address: 3051, key: "redox_alarm_upper", label: "Redox upper alarm threshold", unit: "mV", decimals: 0 },
   { address: 3069, key: "temp_t1_alarm_lower", label: "T1 lower alarm threshold", unit: "°C", decimals: 1 },
   { address: 3070, key: "temp_t1_alarm_upper", label: "T1 upper alarm threshold", unit: "°C", decimals: 1 },
   { address: 3074, key: "temp_t2_alarm_lower", label: "T2 lower alarm threshold", unit: "°C", decimals: 1 },
