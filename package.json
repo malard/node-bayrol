@@ -1,0 +1,69 @@
+{
+  "name": "node-bayrol",
+  "version": "0.1.0",
+  "description": "Node.js client for the Bayrol PoolManager (PM5/Analyt) over local Modbus-TCP. No cloud, no scraping — uses the published Modbus register map.",
+  "keywords": [
+    "bayrol",
+    "poolmanager",
+    "analyt",
+    "modbus",
+    "modbus-tcp",
+    "pool",
+    "swimming-pool",
+    "smart-home",
+    "iot"
+  ],
+  "license": "MIT",
+  "author": "Martin Ellis (@Malard)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malard/node-bayrol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/malard/node-bayrol/issues"
+  },
+  "homepage": "https://github.com/malard/node-bayrol#readme",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "modbus-serial": "^8.0.20"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.39.4",
+    "globals": "^15.15.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.6.0",
+    "typescript-eslint": "^8.59.1",
+    "vitest": "^4.1.5"
+  }
+}
